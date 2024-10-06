@@ -18,7 +18,6 @@ fruits.index('Apple') # Get the index of first occurence of an element
 fruits.count('Apple') # Count occurences of an element in the list
 
 
-
 def print_list(list_name):
     for item in list_name:
         print (item)
