@@ -1,4 +1,5 @@
-#List
+*List*
+
 a list in python is a mutable (changeable), ordered  (maintain order in which elements inserted) collection of items (or element).
 List can hold items of any data types
      - Integers, strings, boolean, list, tuples,set etc
