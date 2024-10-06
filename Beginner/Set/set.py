@@ -48,4 +48,29 @@ my_dict = {frozenset([1,2]): 'value1'}
 print(my_dict) #{frozenset({1, 2}): 'value1'}
 
 
+#Update set in place
+set1 = {1,2,3}
+set2 = {4,5,6}
+set1.update(set2)
+print(set1) #{1, 2, 3, 4, 5, 6}
 
+#Copy operation
+#Shallow copy
+original_set = {1,2,3,4,(4,5)}
+#using copy method
+shallow_copy= original_set.copy()
+#using set() constructor
+shallow_copy = set(original_set)
+
+copied_set = original_set.copy()
+print(original_set)
+print(copied_set)
+
+
+#Lets understand shallow copy and deep copy
+import copy
+print(original_set)
+deep_copy = copy.deepcopy(original_set)
+deep_copy.add(7)
+print(original_set)
+print(deep_copy)
