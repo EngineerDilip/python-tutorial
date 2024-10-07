@@ -45,7 +45,7 @@ file_object = open('filename', 'mode')
 |-----------|--------------------|
 |filename	|The name of the file (can include the path)|
 |mode	|Specifies the purpose of opening the file (e.g., reading, writing, appending)|
-|
+
 
 ## 3. File Modes
 
@@ -60,7 +60,7 @@ Python allows you to open files in different modes depending on the task you wan
 | 'x'	| Open for exclusive creation. Fails if the file already exists. |
 | 't'	| Open in text mode (default mode). |
 | '+'	| Open for updating (reading and writing). |
-|
+
 
 Example:
 ```python
@@ -76,7 +76,7 @@ Python provides various methods to read from a file.
 |read(size)	|Reads the entire file or specified number of bytes	|file.read(10)|	Reads first 10 characters|
 |readline()|	Reads one line at a time|	file.readline()	|Reads a single line|
 |readlines()	|Reads the entire file and returns a list of lines	|file.readlines()	|Returns a list of all lines|
-|
+
 
 Example
 ```python
@@ -124,7 +124,7 @@ The file object has a pointer that tracks the position in the file. You can mani
 |----------|---------------|-----------|
 |seek(offset, whence)|	Moves the file pointer to a specific position|	file.seek(0) moves to the beginning|
 |tell()|Returns the current position of the file pointer	|file.tell()|
-|
+
 
 ## 8. File Iteration
 You can iterate over a file object to read each line one by one.
@@ -192,7 +192,7 @@ The os module also provides functions to work with directories.
 |os.rmdir()	|Removes an empty directory| os.rmdir('new_dir')|
 |os.listdir()|	Lists all files in a directory|	os.listdir('.')|
 |os.chdir()|	Changes the current working directory|	os.chdir('/path/to/directory')|
-|
+
 
 ## 14. File Encoding
 You can specify a file's encoding when opening it, especially useful for reading and writing non-ASCII characters.
@@ -220,4 +220,6 @@ with open('example.txt', 'r', encoding='utf-8') as file:
 - Explain the with statement in Python file handling.
 - How would you read the first 100 bytes of a binary file?
 - What is the difference between write() and writelines() methods?
-- This comprehensive overview covers most of the fundamental concepts and best practices for handling files in Python.
+  
+  
+**This comprehensive overview covers most of the fundamental concepts and best practices for handling files in Python. Happy Learning :)**
