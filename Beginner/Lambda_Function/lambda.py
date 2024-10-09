@@ -69,3 +69,10 @@ sorted_pairs = sorted(pairs, key=lambda x: (x[0], x[1]))
 print(sorted_pairs)
 # Output: [(1, 1), (1, 2), (2, 2), (3, 1)]
 
+
+def make_multiplier(n):
+    return lambda x: x * n
+
+threetimes = make_multiplier(3)
+print(threetimes(2)) #Output: 6
+
