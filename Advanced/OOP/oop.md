@@ -11,11 +11,19 @@ This guide covers the fundamental concepts of Object-Oriented Programming (OOP) 
   - [Key Concepts of OOP](#key-concepts-of-oop)
     - [1. Class and Object](#1-class-and-object)
   - [|Private|	\_\_attribute|	No (but accessible via name mangling)|	Strictly internal use (only within the class)|](#private__attributeno-but-accessible-via-name-manglingstrictly-internal-use-only-within-the-class)
+      - [1.2 Property Decorators and Getters/Setters](#12-property-decorators-and-getterssetters)
+      - [1.3 Static methods and class methods](#13-static-methods-and-class-methods)
+      - [1.4 Operator Overloading (Dunder Methods)](#14-operator-overloading-dunder-methods)
     - [2. Encapsulation](#2-encapsulation)
     - [3. Inheritance](#3-inheritance)
+      - [3.1 Multiple Inheritance](#31-multiple-inheritance)
+      - [3.2 Method Resolution Order (MRO)](#32-method-resolution-order-mro)
+      - [3.3 Mixin Classes](#33-mixin-classes)
+      - [3.4 Metaclasses (Class of a Class)](#34-metaclasses-class-of-a-class)
     - [4. Polymorphism](#4-polymorphism)
     - [5. Abstraction](#5-abstraction)
   - [Python OOP Examples](#python-oop-examples)
+  - [Summary:](#summary)
   - [Do's and Don'ts in OOP](#dos-and-donts-in-oop)
     - [Do's:](#dos)
     - [Don'ts:](#donts)
@@ -144,6 +152,85 @@ Summary Table
 - Use protected attributes (_attribute) when you want to indicate that something is internal but don’t want to enforce strict access control.
 - Use private attributes (__attribute) when you want to strongly signal that an attribute should not be accessed directly.
 
+#### 1.2 Property Decorators and Getters/Setters
+Python provides a convenient way to define getters and setters using the @property decorator, which helps manage access to class attributes without directly exposing the internal representation.
+```python
+
+class Employee:
+    def __init__(self, name, salary):
+        self._name = name
+        self._salary = salary
+
+    @property
+    def salary(self):
+        return self._salary
+
+    @salary.setter
+    def salary(self, value):
+        if value < 0:
+            raise ValueError("Salary can't be negative")
+        self._salary = value
+
+emp = Employee("John", 5000)
+print(emp.salary)  # Getter
+emp.salary = 6000  # Setter
+print(emp.salary)
+```
+
+#### 1.3 Static methods and class methods 
+
+- Allow you to define methods that are related to the class, but don’t operate on instance-level data. They are defined with @staticmethod and @classmethod, respectively.
+
+```python
+
+class MyClass:
+    @staticmethod
+    def static_method():
+        print("This is a static method")
+
+    @classmethod
+    def class_method(cls):
+        print(f"This is a class method, and the class is {cls}")
+
+MyClass.static_method()
+MyClass.class_method()
+```
+---
+**Key Differences:**
+
+| **Feature**               | **Instance Method**                    | **Class Method**                        | **Static Method**                       |
+|---------------------------|----------------------------------------|-----------------------------------------|-----------------------------------------|
+| **Bound to**               | Instance                               | Class                                   | Neither instance nor class              |
+| **First parameter**        | `self` (instance)                      | `cls` (class)                           | No special first parameter              |
+| **Can modify instance?**   | Yes (via `self`)                       | No                                      | No                                      |
+| **Can modify class?**      | Yes                                    | Yes (via `cls`)                         | No                                      |
+| **Decorator**              | None                                   | `@classmethod`                          | `@staticmethod`                         |
+| **Called by**              | Instance                               | Class (or instance)                     | Class (or instance)                     |
+| **Typical use case**       | Access or modify instance data         | Modify class-level data, factory methods | Utility functions that logically belong to the class |
+
+---
+
+#### 1.4 Operator Overloading (Dunder Methods)
+- Python allows you to override or overload operators to give them new meaning in user-defined classes. This is done using dunder (double underscore) methods like __add__, __lt__, __eq__, etc.
+
+```python
+
+class Point:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+    def __add__(self, other):
+        return Point(self.x + other.x, self.y + other.y)
+
+    def __str__(self):
+        return f"Point({self.x}, {self.y})"
+
+p1 = Point(1, 2)
+p2 = Point(3, 4)
+p3 = p1 + p2
+print(p3)  # Output: Point(4, 6)
+```
 ### 2. Encapsulation
 
 Encapsulation refers to bundling data and methods that work on the data within a single unit, such as a class. It restricts access to certain components by making attributes private.
@@ -180,6 +267,104 @@ class Dog(Animal):  # Inheriting from Animal class
 
 my_dog = Dog()
 my_dog.sound()  # Output: The dog barks.
+```
+
+#### 3.1 Multiple Inheritance
+- Python allows a class to inherit from multiple classes, which is not possible in some other languages like Java.
+```python
+class Base1:
+    def __init__(self):
+        self.str1 = "Base1"
+        print("Base1 Initialized")
+
+class Base2:
+    def __init__(self):
+        self.str2 = "Base2"
+        print("Base2 Initialized")
+
+class Derived(Base1, Base2):
+    def __init__(self):
+        Base1.__init__(self)
+        Base2.__init__(self)
+        print("Derived Initialized")
+
+d = Derived()
+print(d.str1, d.str2)
+
+#Output:
+#Base1 Initialized
+#Base2 Initialized
+#Derived Initialized
+#Base1 Base2
+
+```
+Note: Python uses the Method Resolution Order (MRO) to resolve which method or attribute is inherited in case of conflicts in multiple inheritance. You can view the MRO of a class using ClassName.__mro__.
+
+#### 3.2 Method Resolution Order (MRO)
+Python uses a specific order called MRO to determine the method lookup order in the presence of multiple inheritance.
+Python uses the C3 Linearization algorithm to create the MRO.
+You can see the MRO of any class using:
+
+```python
+print(Derived.__mro__)
+```
+Example:
+
+```python
+
+class A:
+    def process(self):
+        print("A process")
+
+class B(A):
+    def process(self):
+        print("B process")
+
+class C(A):
+    def process(self):
+        print("C process")
+
+class D(B, C):
+    pass
+
+d = D()
+d.process()
+print(D.__mro__)
+```
+```
+Output:
+B process
+(<class '__main__.D'>, <class '__main__.B'>, <class '__main__.C'>, <class '__main__.A'>, <class 'object'>)
+```
+#### 3.3 Mixin Classes
+- Mixin classes are used to add reusable methods to a class, without using inheritance as the primary mechanism. They allow you to add functionality to classes in a more flexible way.
+
+```python
+
+class LogMixin:
+    def log(self, message):
+        print(f"LOG: {message}")
+
+class Animal:
+    pass
+
+class Dog(Animal, LogMixin):
+    def bark(self):
+        self.log("Dog is barking!")
+
+d = Dog()
+d.bark()
+```
+#### 3.4 Metaclasses (Class of a Class)
+- A metaclass is a class for classes. It defines how a class behaves. In Python, you can customize the behavior of class creation by defining a custom metaclass.
+```python
+class MyMeta(type):
+    def __new__(cls, name, bases, dct):
+        print(f"Creating class {name}")
+        return super().__new__(cls, name, bases, dct)
+
+class MyClass(metaclass=MyMeta):
+    pass
 ```
 
 ### 4. Polymorphism
@@ -268,6 +453,17 @@ print(rect.area())  # Output: 200
    m.work()  # Output: Alice is managing the HR department.
    ```
 
+---
+## Summary:
+These OOP concepts in Python help build efficient and flexible code. Key advanced topics include:
+
+- Multiple inheritance and Method Resolution Order (MRO)
+- Abstract classes, interfaces, and decorators like @property
+- Static and class methods
+- Encapsulation via protected/private members
+- Operator overloading (dunder methods)
+- Mixin classes for reusable functionality
+- Metaclasses for customizing class creation
 ---
 
 ## Do's and Don'ts in OOP

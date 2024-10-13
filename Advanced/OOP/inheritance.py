@@ -21,3 +21,22 @@ m = Manager("Alice", 80000, "HR")
 m.work()  # Output: Alice is managing the HR department.
 m.check_inherit() #Output: default behavior
 
+
+
+# Example: Mixin classes
+from abc import ABC, abstractmethod
+class LogMixin:
+    def log(self, message):
+        print(f"LOG: {message}")
+
+class Animal:
+    @abstractmethod
+    def bark(self):
+        pass
+
+class Dog(Animal, LogMixin):
+    def bark(self):
+        self.log("Dog is barking!")
+
+d = Dog()
+d.bark()
