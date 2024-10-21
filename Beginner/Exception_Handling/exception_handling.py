@@ -52,6 +52,7 @@ except ValueError as e:
 
 
 # Example 4: Custom Exception
+#Inherit from Exception class
 class CustomError(Exception):
     def __init__(self,message):
         self.message = message
