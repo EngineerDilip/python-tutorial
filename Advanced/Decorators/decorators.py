@@ -201,6 +201,17 @@ print(item2.tags)  # Output: []
 print(item1.total_value())   # Output: 149.5
 print(item1 < item2)         # Output: True (based on `order=True`)
 
+# Example disable  (__eq__) or ordering (__lt__, __gt__) methods
+from dataclasses import dataclass
+
+@dataclass(eq=False, order=False)
+class Product:
+    name: str
+    price: float
+
+p1 = Product("Product1", 100.0)
+p2 = Product("Product1", 100.0)
+print(p1 == p2)  # False, because comparison (__eq__) is disabled
 
 
 #Example: wraps function
@@ -326,4 +337,141 @@ n2 = Number(10)
 print(n1 < n2)  # True
 print(n1 <= n2) # True (auto-generated)
 print(n1 > n2)  # False (auto-generated)
+
+
+
+#Example: @runtime_checkable
+
+from typing import Protocol, runtime_checkable
+
+# Define a protocol with @runtime_checkable
+@runtime_checkable
+class Greetable(Protocol):
+    def greet(self) -> str:
+        ...
+
+class Person:
+    def greet(self) -> str:
+        return "Hello!"
+
+class Dog:
+    def greet(self) -> str:
+        return "Woof!"
+
+# Objects of different classes can still be checked for conformity to Greetable
+alice = Person()
+buddy = Dog()
+
+# Runtime check with isinstance() due to @runtime_checkable
+print(isinstance(alice, Greetable))  # Output: True
+print(isinstance(buddy, Greetable))  # Output: True
+
+
+#Example : without @runtime_checkable
+
+from typing import Protocol
+
+class Walkable(Protocol):
+    def walk(self) -> str:
+        ...
+
+class Animal:
+    def walk(self) -> str:
+        return "Walking..."
+
+# Without @runtime_checkable, this would raise a TypeError
+#print(isinstance(Animal(), Walkable))  # Raises TypeError
+#TypeError: Instance and class checks can only be used with @runtime_checkable protocols
+
+
+
+# Example: @dataclass field
+# Default Values
+from dataclasses import dataclass, field
+
+@dataclass
+class Book:
+    title: str
+    author: str = "Unknown Author"  # default value
+    price: float = field(default=9.99)  # Using field to set default value
+
+# Usage
+book1 = Book(title="1984")
+print(book1)  # Output: Book(title='1984', author='Unknown Author', price=9.99)
+
+#Example:  Using default_factory
+
+from dataclasses import dataclass, field
+from typing import List
+
+@dataclass
+class Classroom:
+    students: List[str] = field(default_factory=list)  # Unique list for each instance
+
+# Usage
+class1 = Classroom()
+class1.students.append("Alice")
+print(class1.students) # Output: ['Alice']
+
+class2 = Classroom()
+print(class2.students)  # Output: []
+
+
+#Example: Excluding Fields from __init__ or __repr__
+
+from dataclasses import dataclass, field
+
+@dataclass
+class Employee:
+    name: str
+    age: int
+    salary: float = field(repr=False)  # Excluded from __repr__
+    department: str = field(default="Engineering", init=False)  # Not in __init__
+
+# Usage
+emp = Employee(name="John", age=30, salary=50000)
+print(emp)  # Output: Employee(name='John', age=30, department='Engineering')
+
+
+#Example: Metadata
+from dataclasses import dataclass, field
+
+@dataclass
+class Product:
+    name: str
+    price: float = field(default=0.0, metadata={"unit": "USD"})
+
+# Accessing metadata
+product = Product(name="Laptop")
+print(product.__dataclass_fields__["price"].metadata)  # Output: {'unit': 'USD'}
+
+
+#Example: MethodType to bind class method with instance
+
+from types import MethodType
+
+class Person:
+    def __init__(self, name):
+        self.name = name
+
+def greet(self):
+    return f"Hello, {self.name}"
+
+p = Person("John")
+say_hello = MethodType(greet, p)  # Bind method to instance
+print(say_hello())  # Output: Hello, John
+
+
+# Example: partialmethod
+
+from functools import partialmethod
+
+class MyClass:
+    def greeting(self, name, message):
+        print(f"{message}, {name}!")
+
+    greet_hello = partialmethod(greeting, message="Hello")
+
+obj = MyClass()
+obj.greet_hello("Alice")  # Output: Hello, Alice!
 
