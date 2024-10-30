@@ -317,7 +317,7 @@ print(loader.data)  # Uses the cached value, doesn't print "Loading data..."
 
 
 
-#Example: total_ordering
+#Example: total_ordering, need  __eq__ and atleast one(>,<,>=,<=) to auto-generate rest operators.
 
 from functools import total_ordering
 
