@@ -69,6 +69,10 @@ class Rectangle:
     def perimeter(self):
         """Calculated property: returns the perimeter."""
         return 2 * (self._width + self._height)
+    @height.deleter
+    def height(self):
+        """Prevent deletion of height"""
+        raise AttributeError("can not delete height")
 
 # Usage
 rect = Rectangle(5, 10)
@@ -78,6 +82,7 @@ print(rect.perimeter)  # Output: 30
 rect.width = 7         # Update width
 print(rect.area)       # Output: 70 (updated area based on new width)
 
+#del rect.height       # AttributeError: can not delete height
 
 #Example: @Classproperty
 
