@@ -165,8 +165,42 @@ p5 = p1 + Point(2,3)
 print(p5) #Output: Point(3,5)
 
 
+#Example: Explicitly specify the type of member variables (attributes) in classes using type hints
+from dataclasses import dataclass
+from typing import Optional, Union
+from typing import List, Dict, Callable, Optional
+
+def on_car_event(event: str) -> None:
+    print(f"Event: {event}")
+"""All non-default arguments must appear before any default arguments"""
+@dataclass
+class Car:
+    make: str
+    model: str
+    year: int
+    road_tax: Union[float, str]  # Could be a float or a string
+    color: List[str]
+    preferences: Dict[str, str]
+    price: float = 0.0  # Default value
+    callback: Optional[Callable[[str], None]] = None
+    description: Optional[str] = None  # Could be a string or None
 
 
+# Creating an instance of Car
+my_car = Car(
+    make="Toyota",
+    model="Corolla",
+    year=2021,
+    price=20000.0,
+    road_tax=150.0,  # or use a string like "Exempt" if needed
+    description="A reliable family car.",
+    color=["Blue", "Black"],  # exterior and interior colors
+    preferences={"fuel": "hybrid", "transmission": "automatic"},
+    callback=on_car_event
+)
+#check if callback is not None.
+if my_car.callback:
+    my_car.callback("My_Event")
 
 
 
