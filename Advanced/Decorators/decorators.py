@@ -480,3 +480,61 @@ class MyClass:
 obj = MyClass()
 obj.greet_hello("Alice")  # Output: Hello, Alice!
 
+
+# Example: decorators with parms
+
+def repeat(n):
+    def decorator(func):
+        def wrapper(*args, **kwargs):
+            for _ in range(n):
+                func(*args, **kwargs)
+        return wrapper
+    return decorator
+
+@repeat(3)
+def say_hello():
+    print("Hello Decorator")
+
+say_hello()  # Prints "Hello" three times
+
+# Example class based decorator
+class LogDecorator:
+    def __init__(self, func):
+        self.func = func
+
+    def __call__(self, *args, **kwargs):
+        print(f"Calling {self.func.__name__}")
+        return self.func(*args, **kwargs)
+
+@LogDecorator
+def greet(name):
+    print(f"Hello, {name}")
+
+greet("Alice")  # Logs the call and greets
+
+#Output:
+#Calling greet
+#Hello, Alice
+
+#Example: Nested Decorator
+
+def bold(func):
+    def wrapper(*args, **kwargs):
+        return f"<b>{func(*args, **kwargs)}</b>"
+    return wrapper
+
+def italic(func):
+    def wrapper(*args, **kwargs):
+        return f"<i>{func(*args, **kwargs)}</i>"
+    return wrapper
+
+@bold
+@italic
+def text():
+    return "Decorated Text"
+
+print(text())  # Outputs: "<b><i>Decorated Text</i></b>"
+
+ #Example: Decorators for Class Methods and Static Methods
+ 
+    
