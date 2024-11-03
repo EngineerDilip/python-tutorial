@@ -202,3 +202,68 @@ print(order.next_state())  # "Order is now delivered."
 print(order.next_state())  # "Order is already delivered."
 print(order.next_state())  # "Order is completed"
 
+
+#Example: Composition for Testing and Mocking
+"""With composition, you can replace complex dependencies with mock objects during testing. 
+This reduces test dependencies and isolates the functionality of the main class."""
+
+class RealAPIClient:
+    def fetch_data(self):
+        return "Real data from API."
+
+class MockAPIClient:
+    def fetch_data(self):
+        return "Mocked data for testing."
+
+class DataService:
+    def __init__(self, api_client):
+        self.api_client = api_client
+
+    def get_data(self):
+        return self.api_client.fetch_data()
+
+# Testing with a mock client
+service = DataService(MockAPIClient())
+print(service.get_data())  # Outputs: "Mocked data for testing"
+
+
+# Example: Composition for Modular Systems and Plugins
+"""Composition can also enable plugin-like systems where behaviors are added, removed, or modified at runtime. 
+This is particularly useful in applications that need modular or pluggable architectures."""
+
+class AddOperation:
+    def execute(self, a, b):
+        return a + b
+
+class SubtractOperation:
+    def execute(self, a, b):
+        return a - b
+
+class DivisionOperation:
+    def execute(self,a,b):
+        if b == 0 :
+            raise ZeroDivisionError("denominator can not zero")
+        return a/b
+class Calculator:
+    def __init__(self):
+        self.plugins = {}  #dictionary to store {func_name_str: class_obj}
+
+    def add_plugin(self, name, operation):
+        self.plugins[name] = operation
+
+    def calculate(self, operation_name, a, b):
+        operation = self.plugins.get(operation_name)
+        if not operation:
+            return "Operation not supported"
+        return operation.execute(a, b)
+
+# Usage
+calculator = Calculator()
+calculator.add_plugin("add", AddOperation())
+calculator.add_plugin("subtract", SubtractOperation())
+calculator.add_plugin("division",DivisionOperation())
+print(calculator.calculate("add", 10, 5))       # 15
+print(calculator.calculate("subtract", 10, 5))  # 5
+print(calculator.calculate("multiply", 10, 5))  # Operation not supported
+print(calculator.calculate("division",10,5)) # 2.0
+
